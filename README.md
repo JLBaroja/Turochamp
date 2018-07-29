@@ -1,6 +1,8 @@
 ﻿## Turochamp
 
-The only modern open-source [UCI](https://en.wikipedia.org/wiki/Universal_Chess_Interface) implementation of the world's first chess playing algorithm, Turochamp, written in Haskell.
+A modern open-source [UCI](https://en.wikipedia.org/wiki/Universal_Chess_Interface) implementation of the world's first chess playing algorithm, Turochamp, written in Haskell.
+
+## History
 
 Turochamp was a theoretical chess playing algorithm created by [Alan Turing](https://en.wikipedia.org/wiki/Alan_Turing) and David Champernowne in 1948.
 Since there was no machine yet that could execute the instructions, Turing acted as a human CPU, performing calculations on paper which required more than half an hour per move.
