@@ -4,7 +4,7 @@ module Color (
 ) where
 
 data Color = White | Black
-    deriving(Show, Eq)
+    deriving(Show, Read, Eq)
 
 other :: Color -> Color
 other White = Black

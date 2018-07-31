@@ -2,7 +2,7 @@ module Piece (
     Piece(..),
 ) where
 
-import Data.Char
+import Data.Char 
 import Color
 
 data PieceType = 
@@ -30,3 +30,18 @@ data Piece = Piece {
 instance Show Piece where
     show (Piece White p) = map toUpper $ show p
     show (Piece Black p) = show p
+
+-- TODO: see if there is a more elegant way to handle invalid characters
+charToPiece :: Char -> Piece
+charToPiece c = if lowercase `elem` "pnbrqk"
+                then let color = if isUpper c then White else Black
+                         kind  = case lowercase of
+                                 'p' -> Pawn
+                                 'n' -> Knight
+                                 'b' -> Bishop
+                                 'r' -> Rook
+                                 'q' -> Queen
+                                 'k' -> King
+                     in (Piece color kind)
+                else error "Invalid Piece!"
+            where lowercase = toLower c
