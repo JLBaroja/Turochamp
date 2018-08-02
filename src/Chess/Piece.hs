@@ -1,5 +1,6 @@
 module Piece (
     Piece(..),
+    PieceType(..),
     charToPiece
 ) where
 
