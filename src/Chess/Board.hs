@@ -3,46 +3,49 @@ module Board(
 ) where
 
 import Data.Bits
+import Data.Char
 import Piece
 import Color
 
-type Square = (Int, Maybe Piece)
+data Rank = Rank1 | Rank2 | Rank3 | Rank4 | Rank5 | Rank6 | Rank7 | Rank8
+    deriving(Eq, Bounded, Enum)
+
+instance Show Rank where
+    show r = show $ (fromEnum r) + 1
+
+data File = FileA | FileB | FileC | FileD | FileE | FileF | FileG | FileH
+    deriving(Eq, Bounded, Enum)
+
+-- instance Show File where
+--    show f = show $ ord $ ((fromEnum f) + 65)
+
+data Square = Square {
+    index   :: Int,
+    pieceOn :: Maybe Piece
+} 
+
+instance Show Square where
+    show sq = show $ rankOf sq
 
 data Board = Board {
-    position :: [Square],
+    position   :: [Square],
     sideToMove :: Color
 } deriving (Show)
 
 newBoard = Board {
-    position = zip [0..] $ replicate 128 Nothing,
+    position = map (\x -> Square x Nothing) [0 .. 127],
     sideToMove = White
 }
 
-foo = (0x16, Just $ Piece Black Rook) :: Square
-
-squareIndex :: Square -> Int
-squareIndex s = fst s
-
-squarePiece :: Square -> Maybe Piece
-squarePiece s = snd s
-
 -- Convert an 0x88 index to a 0-7 rank/file
-squareFile sq = (squareIndex sq) .&. 7
-squareRank sq = shiftR (squareIndex sq) 4
-
+fileOf square = (index square) .&. 7
+rankOf square = shiftR (index square) 4
 -- Any non zero value means that the square is invalid
-squareOnBoard sq = (squareIndex sq) .&. 0x88 == 0
+onBoard sq = (index sq) .&. 0x88 == 0
 
---bar = filter (>3) [0..10]
-squaresOnRank pos rank = filter (\x -> squareRank x == rank && squareOnBoard x) pos
-squaresOnFile pos file = filter (\x -> squareFile x == file && squareOnBoard x) pos
+squaresOnRank pos r = filter (\x -> rankOf x == (fromEnum r) && onBoard x) pos
+squaresOnFile pos f = filter (\x -> fileOf x == (fromEnum f) && onBoard x) pos
 
-bar = squaresOnRank (position newBoard) 7
-baz = squaresOnFile (position newBoard) 7
-
-{-
-    function that returns a list of pieces on a rank or file
-    map (string function) -> list
-    append each mapped list to our string list
-    unlines this string to show board
--}
+pos = position newBoard
+bar = squaresOnRank pos Rank1
+baz = squaresOnFile pos FileA
