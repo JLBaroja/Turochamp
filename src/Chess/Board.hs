@@ -16,8 +16,8 @@ instance Show Rank where
 data File = FileA | FileB | FileC | FileD | FileE | FileF | FileG | FileH
     deriving(Eq, Bounded, Enum)
 
--- instance Show File where
---    show f = show $ ord $ ((fromEnum f) + 65)
+instance Show File where
+    show f = [chr (ord 'A' + (fromEnum f))]
 
 data Square = Square {
     index   :: Int,
