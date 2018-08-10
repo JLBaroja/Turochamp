@@ -51,9 +51,9 @@ rankOf square = toEnum $ shiftR (index square) 4
 onBoard sq = (index sq) .&. 0x88 == 0
 
 --squaresOnRank pos r = filter (\x -> rankOf x == (fromEnum r) && onBoard x) pos
-squaresOnRank pos r = filter (\x -> rankOf x == (r) && onBoard x) pos
-squaresOnFile pos f = filter (\x -> fileOf x == (f) && onBoard x) pos
+squaresOnRank r = filter (\x -> rankOf x == r && onBoard x)
+squaresOnFile f = filter (\x -> fileOf x == f && onBoard x) 
 
 pos = position newBoard
-bar = squaresOnRank pos Rank1
-baz = squaresOnFile pos FileA
+bar = squaresOnRank Rank1 pos
+baz = squaresOnFile FileA pos
