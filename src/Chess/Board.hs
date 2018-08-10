@@ -25,12 +25,17 @@ data Square = Square {
 } 
 
 instance Show Square where
-    show sq = show $ rankOf sq
+    show sq = if onBoard sq
+        then show (fileOf sq) ++ show (rankOf sq)
+        else ""
 
 data Board = Board {
     position   :: [Square],
     sideToMove :: Color
-} deriving (Show)
+} 
+
+instance Show Board where
+    show board = show $ position board
 
 newBoard = Board {
     position = map (\x -> Square x Nothing) [0 .. 127],
@@ -38,13 +43,16 @@ newBoard = Board {
 }
 
 -- Convert an 0x88 index to a 0-7 rank/file
-fileOf square = (index square) .&. 7
-rankOf square = shiftR (index square) 4
+fileOf :: Square -> File
+fileOf square = toEnum $ (index square) .&. 7
+rankOf :: Square -> Rank
+rankOf square = toEnum $ shiftR (index square) 4
 -- Any non zero value means that the square is invalid
 onBoard sq = (index sq) .&. 0x88 == 0
 
-squaresOnRank pos r = filter (\x -> rankOf x == (fromEnum r) && onBoard x) pos
-squaresOnFile pos f = filter (\x -> fileOf x == (fromEnum f) && onBoard x) pos
+--squaresOnRank pos r = filter (\x -> rankOf x == (fromEnum r) && onBoard x) pos
+squaresOnRank pos r = filter (\x -> rankOf x == (r) && onBoard x) pos
+squaresOnFile pos f = filter (\x -> fileOf x == (f) && onBoard x) pos
 
 pos = position newBoard
 bar = squaresOnRank pos Rank1
