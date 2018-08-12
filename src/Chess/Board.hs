@@ -4,6 +4,7 @@ module Board(
 
 import Data.Bits
 import Data.Char
+import Data.List
 import Piece
 import Color
 
@@ -25,9 +26,9 @@ data Square = Square {
 } 
 
 instance Show Square where
-    show sq = if onBoard sq
-        then show (fileOf sq) ++ show (rankOf sq)
-        else ""
+    show sq = case pieceOn sq of
+	Just piece -> show piece
+	Nothing    -> " "
 
 data Board = Board {
     position   :: [Square],
@@ -35,25 +36,36 @@ data Board = Board {
 } 
 
 instance Show Board where
-    show board = show $ position board
+    show board = b where
+	b = unlines ranks ++ toMove
+	ranks = map (\x -> toStr $ squaresOnRank x pos) [Rank8, Rank7 .. Rank1]
+	toMove = show (sideToMove board) ++ " to move"
+	toStr :: [Square] -> String
+	toStr squares = unwords $ intersperse "|" $ map (\x -> show x) squares
 
 newBoard = Board {
     position = map (\x -> Square x Nothing) [0 .. 127],
     sideToMove = White
 }
 
--- Convert an 0x88 index to a 0-7 rank/file
+-- Convert an 0x88 index to a rank/file
 fileOf :: Square -> File
 fileOf square = toEnum $ (index square) .&. 7
+
 rankOf :: Square -> Rank
 rankOf square = toEnum $ shiftR (index square) 4
+
 -- Any non zero value means that the square is invalid
 onBoard sq = (index sq) .&. 0x88 == 0
 
---squaresOnRank pos r = filter (\x -> rankOf x == (fromEnum r) && onBoard x) pos
 squaresOnRank r = filter (\x -> rankOf x == r && onBoard x)
 squaresOnFile f = filter (\x -> fileOf x == f && onBoard x) 
 
 pos = position newBoard
 bar = squaresOnRank Rank1 pos
 baz = squaresOnFile FileA pos
+
+
+
+
+
