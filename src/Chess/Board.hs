@@ -1,5 +1,6 @@
 module Board(
     Board(..),
+    Square(..),
 ) where
 
 import Data.Bits
@@ -41,7 +42,7 @@ instance Show Board where
 	ranks = map (\x -> toStr $ squaresOnRank x pos) [Rank8, Rank7 .. Rank1]
 	toMove = show (sideToMove board) ++ " to move"
 	toStr :: [Square] -> String
-	toStr squares = unwords $ intersperse "|" $ map (\x -> show x) squares
+	toStr squares = unwords $ intersperse "|" $ map show squares
 
 newBoard = Board {
     position = map (\x -> Square x Nothing) [0 .. 127],

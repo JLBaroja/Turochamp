@@ -34,7 +34,7 @@ instance Show Piece where
     show (Piece Black p) = show p
 
 -- TODO: find a more elegant way to handle invalid characters
-charToPiece :: Char -> Piece
+charToPiece :: Char -> Maybe Piece
 charToPiece c = if lowercase `elem` "pnbrqk"
                 then let color = if isUpper c then White else Black
                          kind  = case lowercase of
@@ -44,6 +44,6 @@ charToPiece c = if lowercase `elem` "pnbrqk"
                                  'r' -> Rook
                                  'q' -> Queen
                                  'k' -> King
-                     in (Piece color kind)
-                else error "Invalid Piece!"
+                     in Just $ Piece color kind
+                else Nothing
             where lowercase = toLower c
