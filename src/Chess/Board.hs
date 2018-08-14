@@ -28,8 +28,8 @@ data Square = Square {
 
 instance Show Square where
     show sq = case pieceOn sq of
-	Just piece -> show piece
-	Nothing    -> " "
+              Just piece -> show piece
+              Nothing    -> " "
 
 data Board = Board {
     position   :: [Square],
@@ -38,11 +38,11 @@ data Board = Board {
 
 instance Show Board where
     show board = b where
-	b = unlines ranks ++ toMove
-	ranks = map (\x -> toStr $ squaresOnRank x pos) [Rank8, Rank7 .. Rank1]
-	toMove = show (sideToMove board) ++ " to move"
-	toStr :: [Square] -> String
-	toStr squares = unwords $ intersperse "|" $ map show squares
+                 b = unlines ranks ++ toMove
+                 ranks = map (\x -> toStr $ squaresOnRank x pos) [Rank8, Rank7 .. Rank1]
+                 toMove = show (sideToMove board) ++ " to move"
+                 toStr :: [Square] -> String
+                 toStr squares = unwords $ intersperse "|" $ map show squares
 
 newBoard = Board {
     position = map (\x -> Square x Nothing) [0 .. 127],
