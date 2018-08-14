@@ -15,7 +15,8 @@ first = head $ bar
 -- while giving an appropriate index
 rankToSquares :: String -> [Square]
 rankToSquares r = squares where
-                squares = [Square i p | i <- [0..7], p <- pieces]
+                squares = [Square i p | (i, p) <- zipped]
+                zipped = zip [0..] pieces
                 pieces = concatMap parseRankChar r
 
 parseRankChar :: Char -> [Maybe Piece]
