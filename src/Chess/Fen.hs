@@ -6,24 +6,20 @@ import Color
 startFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 foo = words startFEN
-
 bar = splitByChar '/' $ head foo
-
 first = head $ bar
 
--- TODO: figure out how to construct squares from a piece list
--- while giving an appropriate index
-rankToSquares :: String -> [Square]
-rankToSquares r = squares where
-                squares = [Square i p | (i, p) <- zipped]
-                zipped = zip [0..] pieces
-                pieces = concatMap parseRankChar r
+-- There will always be a piece in the piece list
+-- All we have to do is get the piece (if it exists)
+    -- And then we have to use the rank/file to get a square index
+    -- and then just make a giant list of pieceEntries from this
+    -- and then define a board from it
 
-parseRankChar :: Char -> [Maybe Piece]
-parseRankChar c = if isDigit c then
-                take (digitToInt c) (repeat Nothing)
-                else
-                [charToPiece c]
+rankToPieces :: String -> Rank -> PieceList
+rankToPieces str rank = res where
+                        res = []
+
+test = rankToPieces first Rank8
 
 -- I can't tell if I'm a genius or if this is a horribly disgusting hack
 splitByChar c list = words $ map (\x -> if x == c then ' ' else x) list

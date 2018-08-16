@@ -33,7 +33,6 @@ instance Show Piece where
     show (Piece White p) = map toUpper $ show p
     show (Piece Black p) = show p
 
--- TODO: find a more elegant way to handle invalid characters
 charToPiece :: Char -> Maybe Piece
 charToPiece c = if lowercase `elem` "pnbrqk"
                 then let color = if isUpper c then White else Black

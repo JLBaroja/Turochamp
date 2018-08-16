@@ -1,6 +1,8 @@
 module Board(
     Board(..),
-    Square(..),
+    Rank(..),
+    File(..),
+    PieceList(..),
 ) where
 
 import Data.Bits
@@ -8,6 +10,8 @@ import Data.Char
 import Data.List
 import Piece
 import Color
+
+type PieceList = [PieceEntry]
 
 data Rank = Rank1 | Rank2 | Rank3 | Rank4 | Rank5 | Rank6 | Rank7 | Rank8
     deriving(Eq, Bounded, Enum)
@@ -21,52 +25,40 @@ data File = FileA | FileB | FileC | FileD | FileE | FileF | FileG | FileH
 instance Show File where
     show f = [chr (ord 'A' + (fromEnum f))]
 
-data Square = Square {
-    index   :: Int,
-    pieceOn :: Maybe Piece
+data PieceEntry = PieceEntry {
+    pieceAt :: Piece,
+    squareIndex :: Int
 } 
 
-instance Show Square where
-    show sq = case pieceOn sq of
-              Just piece -> show piece
-              Nothing    -> " "
+instance Show PieceEntry where
+    show pe = (show $ pieceAt pe) ++ " on " ++ (show $ squareIndex pe)
 
 data Board = Board {
-    position   :: [Square],
+    pieceList :: PieceList,
     sideToMove :: Color
 } 
 
 instance Show Board where
     show board = b where
-                 b = unlines ranks ++ toMove
-                 ranks = map (\x -> toStr $ squaresOnRank x pos) [Rank8, Rank7 .. Rank1]
-                 toMove = show (sideToMove board) ++ " to move"
-                 toStr :: [Square] -> String
-                 toStr squares = unwords $ intersperse "|" $ map show squares
+                 b = "hi"
 
-newBoard = Board {
-    position = map (\x -> Square x Nothing) [0 .. 127],
+emptyBoard = Board {
+    pieceList = [],
     sideToMove = White
 }
 
--- Convert an 0x88 index to a rank/file
-fileOf :: Square -> File
-fileOf square = toEnum $ (index square) .&. 7
+toIndex :: File -> Rank -> Int
+toIndex f r = 16 * rank07 + file07 where
+              rank07 = fromEnum r
+              file07 = fromEnum f
 
-rankOf :: Square -> Rank
-rankOf square = toEnum $ shiftR (index square) 4
+-- Convert an 0x88 index to a rank/file
+indexToFile :: Int -> File
+indexToFile index = toEnum $ (index) .&. 7
+
+indexToRank :: Int -> Rank
+indexToRank index = toEnum $ shiftR (index) 4
 
 -- Any non zero value means that the square is invalid
-onBoard sq = (index sq) .&. 0x88 == 0
-
-squaresOnRank r = filter (\x -> rankOf x == r && onBoard x)
-squaresOnFile f = filter (\x -> fileOf x == f && onBoard x) 
-
-pos = position newBoard
-bar = squaresOnRank Rank1 pos
-baz = squaresOnFile FileA pos
-
-
-
-
-
+onBoard :: Int -> Bool
+onBoard index = index .&. 0x88 == 0
