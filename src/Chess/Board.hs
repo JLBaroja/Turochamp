@@ -5,6 +5,7 @@ module Board(
     PieceEntry(..),
     PieceList,
     toIndex,
+    allRanks
 ) where
 
 import Data.Bits
@@ -18,11 +19,15 @@ type PieceList = [PieceEntry]
 data Rank = Rank1 | Rank2 | Rank3 | Rank4 | Rank5 | Rank6 | Rank7 | Rank8
     deriving(Eq, Bounded, Enum)
 
+allRanks = [Rank1, Rank2 .. Rank8] 
+
 instance Show Rank where
     show r = show $ (fromEnum r) + 1
 
 data File = FileA | FileB | FileC | FileD | FileE | FileF | FileG | FileH
     deriving(Eq, Bounded, Enum)
+
+allFiles = [FileA, FileB .. FileH]
 
 instance Show File where
     show f = [chr (ord 'A' + (fromEnum f))]
@@ -41,8 +46,15 @@ data Board = Board {
 } 
 
 instance Show Board where
-    show board = b where
-                 b = "hi"
+    show board = pos where
+         pos = ranks ++ toMove
+         ranks = concatMap showRank (reverse allRanks)
+         showRank r = "| " ++ (concatMap (entryAt r) allFiles) ++ "\n"
+         entryAt r f = p ++ " | " where
+            p = case find (\entry -> (squareIndex entry) == (toIndex f r)) (pieceList board) of
+                        Just entry -> show $ pieceAt entry
+                        Nothing -> " "
+         toMove = (show $ sideToMove board) ++ " to move"
 
 emptyBoard = Board {
     pieceList = [],

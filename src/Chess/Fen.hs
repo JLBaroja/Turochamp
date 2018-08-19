@@ -6,15 +6,26 @@ import Color
 
 startFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
-foo = words startFEN
-splitLines = splitByChar '/' $ head foo
-first = head $ splitLines
+startPos = parseFEN startFEN
 
-test = concatMap files splitLines
+parseFEN :: String -> Board
+parseFEN fen = board where
+               board = Board {
+                   pieceList = plist,
+                   sideToMove = toMove
+               }
+               toMove = case splitFEN !! 1 of 
+                        "w" -> White
+                        "b" -> Black
+               splitFEN = words fen
+               pieceLocations = head splitFEN
+               ranks = splitByChar '/' pieceLocations
+               plist = parsePieces ranks
 
-zipRanks = zip [Rank8, Rank7 .. Rank1] 
+parsePieces :: [String] -> PieceList
+parsePieces list = concatMap parseRank $ zipRanks list
 
-parsePieces = concatMap parseRank $ zipRanks splitLines
+zipRanks = zip $ reverse allRanks
 
 parseRank :: (Rank, String) -> PieceList
 parseRank (r, s) = map (toEntry r) (files s)
