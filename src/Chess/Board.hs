@@ -2,7 +2,9 @@ module Board(
     Board(..),
     Rank(..),
     File(..),
-    PieceList(..),
+    PieceEntry(..),
+    PieceList,
+    toIndex,
 ) where
 
 import Data.Bits
