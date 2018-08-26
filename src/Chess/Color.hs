@@ -1,4 +1,4 @@
-module Color (
+module Chess.Color (
     Color(..),
     other,
 ) where

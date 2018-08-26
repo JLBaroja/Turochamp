@@ -1,8 +1,13 @@
+module Chess.Fen (
+    startPos,
+    parseFEN
+) where
+
 import Data.Char
 import Data.Maybe
-import Piece
-import Board
-import Color
+import Chess.Piece
+import Chess.Board
+import Chess.Color
 
 startFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 

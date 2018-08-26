@@ -1,11 +1,11 @@
-module Piece (
+module Chess.Piece (
     Piece(..),
     PieceType(..),
     charToPiece
 ) where
 
 import Data.Char 
-import Color
+import Chess.Color
 
 data PieceType = 
     Pawn   |

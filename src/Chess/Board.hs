@@ -1,4 +1,4 @@
-module Board(
+module Chess.Board(
     Board(..),
     Rank(..),
     File(..),
@@ -11,8 +11,8 @@ module Board(
 import Data.Bits
 import Data.Char
 import Data.List
-import Piece
-import Color
+import Chess.Piece
+import Chess.Color
 
 type PieceList = [PieceEntry]
 
