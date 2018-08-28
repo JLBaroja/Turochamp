@@ -4,7 +4,7 @@ module Chess.Board(
     File(..),
     PieceEntry(..),
     PieceList,
-    toIndex,
+    fileRanktoSquare,
     allRanks
 ) where
 
@@ -13,6 +13,12 @@ import Data.Char
 import Data.List
 import Chess.Piece
 import Chess.Color
+
+newtype Square = Square Int
+    deriving(Eq)
+
+instance Show Square where
+    show sq = "test"
 
 type PieceList = [PieceEntry]
 
@@ -34,11 +40,11 @@ instance Show File where
 
 data PieceEntry = PieceEntry {
     pieceAt :: Piece,
-    squareIndex :: Int
+    squareOf :: Square
 } 
 
 instance Show PieceEntry where
-    show pe = (show $ pieceAt pe) ++ " on " ++ (show $ squareIndex pe)
+    show pe = (show $ pieceAt pe) ++ " on " ++ (show $ squareOf pe)
 
 data Board = Board {
     pieceList :: PieceList,
@@ -51,7 +57,7 @@ instance Show Board where
          ranks = concatMap showRank (reverse allRanks)
          showRank r = "| " ++ (concatMap (entryAt r) allFiles) ++ "\n"
          entryAt r f = p ++ " | " where
-            p = case find (\entry -> (squareIndex entry) == (toIndex f r)) (pieceList board) of
+            p = case find (\entry -> (squareOf entry) == (fileRanktoSquare f r)) (pieceList board) of
                         Just entry -> show $ pieceAt entry
                         Nothing -> " "
          toMove = (show $ sideToMove board) ++ " to move"
@@ -61,8 +67,8 @@ emptyBoard = Board {
     sideToMove = White
 }
 
-toIndex :: File -> Rank -> Int
-toIndex f r = 16 * rank07 + file07 where
+fileRanktoSquare :: File -> Rank -> Square
+fileRanktoSquare f r = Square $ 16 * rank07 + file07 where
               rank07 = fromEnum r
               file07 = fromEnum f
 

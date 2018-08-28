@@ -37,7 +37,7 @@ parseRank (r, s) = map (toEntry r) (files s)
 
 toEntry :: Rank -> (Int, Piece) -> PieceEntry
 toEntry rank (f, p) = PieceEntry p i where
-                      i = toIndex (toEnum f) rank
+                      i = fileRanktoSquare  (toEnum f) rank
 
 shift :: Int -> [(Int, a)] -> [(Int, a)]
 shift k = map (\(i, x) -> (k+i,x))
