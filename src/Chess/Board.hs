@@ -3,9 +3,11 @@ module Chess.Board(
     Rank(..),
     File(..),
     PieceEntry(..),
+    Square(..),
     PieceList,
     fileRanktoSquare,
-    allRanks
+    allRanks,
+    onBoard,
 ) where
 
 import Data.Bits
@@ -14,11 +16,12 @@ import Data.List
 import Chess.Piece
 import Chess.Color
 
-newtype Square = Square Int
-    deriving(Eq)
+newtype Square = Square {
+    index :: Int
+} deriving(Eq)
 
 instance Show Square where
-    show sq = "test"
+    show sq = show (squareToFile sq) ++ show (squareToRank sq)
 
 type PieceList = [PieceEntry]
 
@@ -73,12 +76,12 @@ fileRanktoSquare f r = Square $ 16 * rank07 + file07 where
               file07 = fromEnum f
 
 -- Convert an 0x88 index to a rank/file
-indexToFile :: Int -> File
-indexToFile index = toEnum $ (index) .&. 7
+squareToFile :: Square -> File
+squareToFile sq = toEnum $ (index sq) .&. 7
 
-indexToRank :: Int -> Rank
-indexToRank index = toEnum $ shiftR (index) 4
+squareToRank :: Square -> Rank
+squareToRank sq = toEnum $ shiftR (index sq) 4
 
 -- Any non zero value means that the square is invalid
-onBoard :: Int -> Bool
-onBoard index = index .&. 0x88 == 0
+onBoard :: Square -> Bool
+onBoard sq = (index sq) .&. 0x88 == 0
