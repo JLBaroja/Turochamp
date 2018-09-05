@@ -1,14 +1,17 @@
-module Chess.Move where
+module Chess.Move(
+    Move(..),
+) where
 
 import Chess.Board
 import Chess.Color
 import Chess.Piece
+import Chess.Fen
 
 -- Move vectors for each individual piece
-rookVector = [-1, 1, 16, -16] 
-bishopVector = [-15, 15, -17, 17]
-knightVector = [-14, -18, -31, -33, 14, 18, 31, 33]
-queenVector = rookVector ++ bishopVector
+rookDirections = [-1, 1, 16, -16] 
+bishopDirections = [-15, 15, -17, 17]
+knightDirections = [-14, -18, -31, -33, 14, 18, 31, 33]
+queenDirections = rookDirections ++ bishopDirections
 
 -- TODO: Add promotion possibility
 data Move = Move {
@@ -19,26 +22,32 @@ data Move = Move {
 
 d5 = Square 0x43
 
--- TODO: Remove this function
--- TODO: generate moves with the board position accounted for
-getAllMovesFor :: PieceType -> Square -> [Square]
-getAllMovesFor p s = case p of
-                     Bishop -> slide bishopVector
-                     Rook -> slide rookVector
-                     Queen -> slide queenVector
-                     King -> concatMap ((take 1) . slideFromOffset s) queenVector
-                     Knight -> concatMap ((take 1) . slideFromOffset s) knightVector
-                     otherwise -> []
-                     where
-                        slide = concatMap (slideFromOffset s)
+foo = concatMap ((take 1) . vectorFromSquare d5) knightDirections
+bar = map (vectorFromSquare d5) rookDirections
 
-foo = getAllMovesFor Rook d5
-list = map (PieceEntry (Piece White Bishop)) foo
-boardTest = Board (list) White
+testBoard = emptyBoard
+testEntry = PieceEntry (Piece White Rook) d5 
 
--- Only use with sliding pieces
--- generate an infinite list going in any direction
-slideFromOffset :: Square -> Int -> [Square]
-slideFromOffset from offset = takeWhile (onBoard) [Square x | x <- [start, next ..]] where
-                                start = (index from) + offset
-                                next = start + offset
+test = getMovesForPiece testBoard testEntry
+
+-- Take a pieceEntry & board, get list of moves
+getMovesForPiece :: Board -> PieceEntry -> [Square]
+getMovesForPiece board entry = foo where
+    foo = []
+    sq = squareOf entry
+    piece = pieceAt entry
+    color = pieceColor piece
+    enemy = other color
+    {-
+    moves = case pieceType piece of
+        Pawn -> []
+        Knight -> []
+        Bishop -> slide bishopDirections
+        Rook -> slide rookDirections
+        Queen -> slide queenDirections
+        King -> [] -}
+
+vectorFromSquare square direction = 
+    takeWhile onBoard [Square x | x <- [start, next ..]] where
+    start = (index square) + direction
+    next = start + direction

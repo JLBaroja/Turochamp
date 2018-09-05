@@ -6,6 +6,7 @@ module Chess.Board(
     Square(..),
     PieceList,
     fileRanktoSquare,
+    emptyBoard,
     allRanks,
     onBoard,
 ) where
@@ -21,7 +22,9 @@ newtype Square = Square {
 } deriving(Eq)
 
 instance Show Square where
-    show sq = show (squareToFile sq) ++ show (squareToRank sq)
+    show sq = if onBoard sq then 
+              show (squareToFile sq) ++ show (squareToRank sq)
+              else "?"
 
 type PieceList = [PieceEntry]
 
@@ -84,4 +87,5 @@ squareToRank sq = toEnum $ shiftR (index sq) 4
 
 -- Any non zero value means that the square is invalid
 onBoard :: Square -> Bool
-onBoard sq = (index sq) .&. 0x88 == 0
+onBoard sq = i .&. 0x88 == 0 && (i >= 0 && i <= 127)
+             where i = index sq

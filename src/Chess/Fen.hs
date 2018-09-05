@@ -40,7 +40,7 @@ toEntry rank (f, p) = PieceEntry p i where
                       i = fileRanktoSquare  (toEnum f) rank
 
 shift :: Int -> [(Int, a)] -> [(Int, a)]
-shift k = map (\(i, x) -> (k+i,x))
+shift k = map (\(i, x) -> (k + i, x))
 
 files :: String -> [(Int, Piece)]
 files [] = []
